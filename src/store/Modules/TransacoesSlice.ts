@@ -1,8 +1,8 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '..';
-import EntradaType from '../../Types/EntradaType';
+import TransactionType from '../../Types/TransactionType';
 
-const adapter = createEntityAdapter<EntradaType>({
+const adapter = createEntityAdapter<TransactionType>({
   selectId: item => item.id
 });
 

@@ -1,6 +1,7 @@
 import { Button, Container, Grid, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import ExibeEntrada from '../components/Carteira/ExibeEntrada';
+import ExibeSaida from '../components/Carteira/ExibeSaida';
+import ExibeEntrada from '../components/Carteira/ExibeTransacoes';
 import ResponsiveAppBar from '../components/ResponsiveAppBar';
 import { useAppDispatch, useAppSelector } from '../store/Hooks';
 import { somaEntrada, somaSaida } from '../store/Modules/saldoSlice';
@@ -31,10 +32,23 @@ const Home: React.FC = () => {
   const handleAddEntrada = () => {
     dispatch(
       addTransaction({
-        id: Math.floor(Date.now() / 10000),
+        id: new Date().getTime(),
         valor: Number(Entradas),
-        Data: 'hoje',
-        Remetente: 'login'
+        data: 'hoje',
+        remetente: 'login',
+        tipo: 'C'
+      })
+    );
+  };
+
+  const handleAddSaida = () => {
+    dispatch(
+      addTransaction({
+        id: new Date().getTime() / 10000,
+        valor: Number(Saidas),
+        data: 'hoje',
+        destinatario: 'DESTINATÁRIO',
+        tipo: 'D'
       })
     );
   };
@@ -84,26 +98,46 @@ const Home: React.FC = () => {
               Entradas
             </Button>
 
-            <Paper elevation={2} sx={{ padding: '5px' }}>
+            <Paper elevation={2} sx={{ padding: '5px', marginTop: '10px' }}>
+              <ExibeEntrada />
               {TransactionsRedux.map(item => {
-                return (
-                  <>
-                    <ExibeEntrada />
-                    <Grid container xs={12} key={item.id}>
-                      <Grid xs={2}>{item.id}</Grid>
-                      <Grid xs={3}>{item.valor}</Grid>
-                      <Grid xs={3}>{item.Data}</Grid>
-                      <Grid xs={3}>{item.Remetente}</Grid>
-                    </Grid>
-                  </>
-                );
+                if (item.tipo === 'C') {
+                  return (
+                    <>
+                      <Grid container xs={12} key={item.id}>
+                        <Grid xs={2}>{item.id}</Grid>
+                        <Grid xs={3}>{item.valor}</Grid>
+                        <Grid xs={3}>{item.data}</Grid>
+                        <Grid xs={3}>{item.remetente}</Grid>
+                      </Grid>
+                    </>
+                  );
+                }
               })}
             </Paper>
           </Grid>
           <Grid item lg={6} xs={12}>
-            <Button variant="contained" onClick={Diminuir}>
+            <Button variant="contained" onClick={handleAddSaida}>
               Saidas
             </Button>
+
+            <Paper elevation={2} sx={{ padding: '5px', marginTop: '10px' }}>
+              <ExibeSaida />
+              {TransactionsRedux.map(item => {
+                if (item.tipo === 'D') {
+                  return (
+                    <>
+                      <Grid container xs={12} key={item.id}>
+                        <Grid xs={2}>{item.id}</Grid>
+                        <Grid xs={3}>{item.valor}</Grid>
+                        <Grid xs={3}>{item.data}</Grid>
+                        <Grid xs={3}>{item.destinatario}</Grid>
+                      </Grid>
+                    </>
+                  );
+                }
+              })}
+            </Paper>
           </Grid>
         </Grid>
       </Container>

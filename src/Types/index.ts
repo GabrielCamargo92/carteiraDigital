@@ -1,4 +1,4 @@
-import Entrada from './EntradaType';
+import Entrada from './TransactionType';
 import Saida from './SaidaType';
 import CarteiraTypes from './CarteiraTypes';
 
